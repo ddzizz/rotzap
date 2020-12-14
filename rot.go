@@ -8,6 +8,7 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 )
 
+// RotConfig is configuration for file-rotatelogs
 type RotConfig struct {
 	Path         string `json:"path" yaml:"path"`
 	RotTime      int64  `json:"rotTime" yaml:"rotTime"`
@@ -17,10 +18,15 @@ type RotConfig struct {
 	ForceNewFile bool   `json:"forceNewFile" yaml:"forceNewFile"`
 }
 
+// InitRot init file-rotatelogs from config
 func InitRot(cfg *RotConfig) (*rotatelogs.RotateLogs, error) {
-	path, err := osext.ExecutableFolder()
-	if err != nil {
-		return nil, err
+	path := cfg.Path
+	if !filepath.IsAbs(path) {
+		exePath, err := osext.ExecutableFolder()
+		if err != nil {
+			return nil, err
+		}
+		path = filepath.Join(exePath, path)
 	}
 
 	var options []rotatelogs.Option
@@ -44,7 +50,7 @@ func InitRot(cfg *RotConfig) (*rotatelogs.RotateLogs, error) {
 		options = append(options, rotatelogs.ForceNewFile())
 	}
 
-	rotLog, err := rotatelogs.New(filepath.Join(path, cfg.Path), options...)
+	rotLog, err := rotatelogs.New(path, options...)
 	if err != nil {
 		return nil, err
 	}

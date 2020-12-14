@@ -1,0 +1,14 @@
+rot:
+  path: "D:/Projects/ddzizz/rotzap/log/%Y%m%d_%H%M%S"
+  rotTime: 60
+  rotSize: 10240
+
+zap:
+  development: true
+  disableCaller: false
+  disableStacktrace: false
+  encoderConfig:
+    timeKey: "ts"
+    levelKey: "lev"
+    messageKey: "msg"
+    
