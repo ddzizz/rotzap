@@ -17,6 +17,8 @@ func InitZap(cfg zap.Config, writer io.Writer) (*zap.Logger, error) {
 	enc := zapcore.NewJSONEncoder(cfg.EncoderConfig)
 	if cfg.Encoding == "console" {
 		enc = zapcore.NewConsoleEncoder(cfg.EncoderConfig)
+	} else {
+		enc = zapcore.NewJSONEncoder(cfg.EncoderConfig)
 	}
 	zapLog := zap.New(
 		zapcore.NewCore(

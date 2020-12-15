@@ -1,5 +1,6 @@
+
 rot:
-  path: "D:/Projects/ddzizz/rotzap/log/%Y%m%d_%H%M%S"
+  path: "log/yaml/%Y%m%d_%H%M%S"
   rotTime: 60
   rotSize: 10240
 

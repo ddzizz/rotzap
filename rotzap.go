@@ -17,7 +17,7 @@ type Config struct {
 	Zap zap.Config `yaml:"zap" json:"zap"`
 }
 
-//loadRotZapConfig Load config file.
+// loadRotZapConfig Load config file.
 func loadRotZapConfig(cfgName string) (*Config, error) {
 	path := cfgName
 	ext := filepath.Ext(cfgName)
@@ -54,7 +54,7 @@ func loadRotZapConfig(cfgName string) (*Config, error) {
 	return nil, fmt.Errorf("Rotzap config file only support 'yaml' and 'json' format")
 }
 
-//InitRotZap Init file-rotatelogs and zap by config.
+// InitRotZap init file-rotatelogs and zap by config.
 func InitRotZap(rotCfg RotConfig, zapCfg zap.Config) (*zap.Logger, error) {
 	rot, err := InitRot(&rotCfg)
 	if err != nil {
@@ -67,6 +67,34 @@ func InitRotZap(rotCfg RotConfig, zapCfg zap.Config) (*zap.Logger, error) {
 	}
 
 	return zapLog, nil
+}
+
+// InitRotZapFromYaml init file-rotatelogs and zap from a yaml configuration string.
+func InitRotZapFromYaml(yamlStr string) (*zap.Logger, error) {
+	cfg := Config{
+		Zap: zap.NewDevelopmentConfig(),
+	}
+
+	err := yaml.Unmarshal([]byte(yamlStr), &cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return InitRotZap(cfg.Rot, cfg.Zap)
+}
+
+// InitRotZapFromJSON init file-rotatelogs and zap from a json configuration string.
+func InitRotZapFromJSON(jsonStr string) (*zap.Logger, error) {
+	cfg := Config{
+		Zap: zap.NewDevelopmentConfig(),
+	}
+
+	err := json.Unmarshal([]byte(jsonStr), &cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return InitRotZap(cfg.Rot, cfg.Zap)
 }
 
 //InitRotZapFromCfgFile Init file-rotatelogs and zap from a config file. Only support 'yaml' and 'json' format.
