@@ -58,5 +58,5 @@ For details, please check options.go in [github.com/lestrrat-go/file-rotatelogs]
 | maxAge | int64 | sets the max age of a log file before it gets purged from  the file system. |
 | forceNewFile | bool | ensures a new file is created every time New() is called. If the base file name already exists, an implicit rotation is performed |
 
-##  Configurations for zap
+## Configurations for zap
 For details, please check config.go in [github.com/uber-go/zap](https://github.com/uber-go/zap).
