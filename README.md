@@ -9,6 +9,7 @@ go get github.com/ddzizz/rotzap
 # Dependencies
 - [github.com/uber-go/zap](https://github.com/uber-go/zap)
 - [github.com/lestrrat-go/file-rotatelogs](https://github.com/lestrrat-go/file-rotatelogs)
+- [github.com/kardianos/osext](https://github.com/kardianos/osext)
 
 # Usage
 ## Init form yaml or json configuration file
