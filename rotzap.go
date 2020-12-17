@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/kardianos/osext"
@@ -15,6 +16,47 @@ import (
 type Config struct {
 	Rot RotConfig  `yaml:"rot" json:"rot"`
 	Zap zap.Config `yaml:"zap" json:"zap"`
+}
+
+func fileExists(name string) bool {
+	if _, err := os.Stat(name); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
+}
+
+func loadYamlConfig(path string) (*Config, error) {
+	cfg := Config{
+		Zap: zap.NewDevelopmentConfig(),
+	}
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	err = yaml.Unmarshal(data, &cfg)
+	if err != nil {
+		return nil, err
+	}
+	return &cfg, nil
+}
+
+func loadJsonConfig(path string) (*Config, error) {
+	cfg := Config{
+		Zap: zap.NewDevelopmentConfig(),
+	}
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(data, &cfg)
+	if err != nil {
+		return nil, err
+	}
+	return &cfg, nil
 }
 
 // loadRotZapConfig Load config file.
@@ -29,29 +71,21 @@ func loadRotZapConfig(cfgName string) (*Config, error) {
 		path = filepath.Join(exePath, path)
 	}
 
-	cfg := Config{
-		Zap: zap.NewDevelopmentConfig(),
-	}
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-
-	if ext == ".yml" || ext == ".yaml" {
-		err = yaml.Unmarshal(data, &cfg)
-		if err != nil {
-			return nil, err
-		}
-		return &cfg, nil
+	if ext == ".yaml" || ext == ".yml" {
+		return loadYamlConfig(path)
 	} else if ext == ".json" {
-		err = json.Unmarshal(data, &cfg)
-		if err != nil {
-			return nil, err
+		return loadJsonConfig(path)
+	} else {
+		if fileExists(path + ".yaml") {
+			return loadYamlConfig(path + ".yaml")
+		} else if fileExists(path + ".yml") {
+			return loadYamlConfig(path + ".yml")
+		} else if fileExists(path + ".json") {
+			return loadJsonConfig(path + ".json")
 		}
-		return &cfg, nil
 	}
 
-	return nil, fmt.Errorf("Rotzap config file only support 'yaml' and 'json' format")
+	return nil, fmt.Errorf("Config file is not exists!")
 }
 
 // InitRotZap init file-rotatelogs and zap by config.

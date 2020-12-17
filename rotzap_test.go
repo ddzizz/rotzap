@@ -1,8 +1,6 @@
 package rotzap
 
 import (
-	"io/ioutil"
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -75,13 +73,7 @@ func TestInitRotZapFromCfgFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	path := filepath.Join(exePath, "sample.yml")
-
-	err = ioutil.WriteFile(path, []byte(yamlStr), 0644)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer os.Remove(path)
+	path := filepath.Join(exePath, "sample")
 
 	zapLog, err := InitRotZapFromCfgFile(path)
 	if err != nil {
