@@ -12,7 +12,7 @@ go get github.com/ddzizz/rotzap
 - [github.com/kardianos/osext](https://github.com/kardianos/osext)
 
 # Usage
-## Init form yaml or json configuration file
+## Init from yaml or json configuration file
 ```go
 zapLog, err := rotzap.InitRotZapFromCfgFile("sample.yml")
 if err != nil {
